@@ -21,6 +21,7 @@ struct ContentView: View {
     @State var card1: Int = 0
     @State var card2: Int = 0
     @State var message: String = ""
+    @State var deck: [Int] = Array(repeating: 0, count: 52)
     
     var body: some View {
         ZStack {
@@ -45,14 +46,30 @@ struct ContentView: View {
                     Image("card\(card2)").padding()
                     Spacer()
                 }
+                Text("Cards left in deck: \(deck.count)").font(.title)
+                    .bold()
+                    .padding()
                 Button {
-                    deal()
+                    if deck.count == 0 {
+                        reset()
+                    }
+                    else {
+                        if deck[0] == 0 {
+                            shuffle()
+                        }
+                        deal()
+                    }
                 } label: {
-                    Image("deal")
+                    if deck.count == 0 {
+                        Image("reset")
+                    }
+                    else {
+                        Image("deal")
+                    }
                 }
                 Text(message).font(.largeTitle)
                     .bold()
-                    .bold()
+                    .padding()
                 HStack {
                     VStack {
                         Text("Player").font(.title)
@@ -77,18 +94,67 @@ struct ContentView: View {
     }
     
     func deal() {
-        card1 = Int.random(in: 2...14)
-        card2 = Int.random(in: 2...14)
+        var card: Int = deck.randomElement()!
+        var index: Int = deck.firstIndex(of: card)!
+        card1 = deck.remove(at: index)
+        card = deck.randomElement()!
+        index = deck.firstIndex(of: card)!
+        card2 = deck.remove(at: index)
         if card1 > card2 {
             score1 += 1
-            message = "Player wins!"
+            if deck.count == 0 {
+                declareWinner()
+            }
+            else {
+                message = "Player wins!"
+            }
         }
         else if card2 > card1 {
             score2 += 1
-            message = "CPU wins!"
+            if deck.count == 0 {
+                declareWinner()
+            }
+            else {
+                message = "CPU wins!"
+            }
         }
         else {
-            message = "It's a draw!"
+            if deck.count == 0 {
+                declareWinner()
+            }
+            else {
+                message = "It's a draw!"
+            }
+        }
+    }
+    
+    func shuffle() {
+        deck = []
+        for _ in 1...4 {
+            for i in 2...14 {
+                deck.append(i)
+            }
+        }
+    }
+    
+    func reset() {
+        shuffle()
+        score1 = 0
+        score2 = 0
+        card1 = 0
+        card2 = 0
+        message = ""
+    }
+    
+    func declareWinner() {
+        if score1 > score2 {
+            message = "Player won the game!"
+        }
+        else if score2 > score1 {
+            message = "CPU won the game!"
+        }
+        else {
+            message = "The game was a draw!"
         }
     }
 }

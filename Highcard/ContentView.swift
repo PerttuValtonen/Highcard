@@ -83,7 +83,7 @@ struct ContentView: View {
             score1 += 1
             message = "Player wins!"
         }
-        if card2 > card1 {
+        else if card2 > card1 {
             score2 += 1
             message = "CPU wins!"
         }

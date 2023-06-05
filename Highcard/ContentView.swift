@@ -7,8 +7,12 @@
 
 import SwiftUI
 
-let backgroundGradient = LinearGradient(
-    colors: [Color.red, Color.blue],
+let foregroundGradient = LinearGradient(
+    colors: [Color.white, Color.gray],
+    startPoint: .top, endPoint: .bottom)
+
+let titleGradient = LinearGradient(
+    colors: [Color.orange, Color.yellow],
     startPoint: .top, endPoint: .bottom)
 
 struct ContentView: View {
@@ -20,15 +24,17 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            //Color(.cyan).ignoresSafeArea()
-            backgroundGradient
             Image("background-cloth")
             VStack {
+                Text("High Card Game").font(.largeTitle)
+                    .bold()
+                    .italic()
+                    .foregroundStyle(titleGradient)
                 HStack {
-                    Text("Player 1 card").font(.title)
+                    Text("Player card").font(.title)
                         .bold()
                         .padding()
-                    Text("Player 2 card").font(.title)
+                    Text("CPU card").font(.title)
                         .bold()
                         .padding()
                 }
@@ -49,7 +55,7 @@ struct ContentView: View {
                     .bold()
                 HStack {
                     VStack {
-                        Text("Player 1").font(.title)
+                        Text("Player").font(.title)
                             .bold()
                             .padding()
                         Text("Score: \(score1)")
@@ -57,7 +63,7 @@ struct ContentView: View {
                         .bold()
                         .padding()
                     VStack {
-                        Text("Player 2").font(.title)
+                        Text("CPU").font(.title)
                             .bold()
                             .padding()
                         Text("Score: \(score2)")
@@ -66,19 +72,20 @@ struct ContentView: View {
                         .padding()
                 }
             }
-        }.foregroundColor(.white)
+        }.foregroundStyle(foregroundGradient)
             .ignoresSafeArea()
     }
+    
     func deal() {
         card1 = Int.random(in: 2...14)
         card2 = Int.random(in: 2...14)
         if card1 > card2 {
             score1 += 1
-            message = "Player 1 wins!"
+            message = "Player wins!"
         }
         if card2 > card1 {
             score2 += 1
-            message = "Player 2 wins!"
+            message = "CPU wins!"
         }
         else {
             message = "It's a draw!"

@@ -7,15 +7,82 @@
 
 import SwiftUI
 
+let backgroundGradient = LinearGradient(
+    colors: [Color.red, Color.blue],
+    startPoint: .top, endPoint: .bottom)
+
 struct ContentView: View {
+    @State var score1: Int = 0
+    @State var score2: Int = 0
+    @State var card1: Int = 0
+    @State var card2: Int = 0
+    @State var message: String = ""
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        ZStack {
+            //Color(.cyan).ignoresSafeArea()
+            backgroundGradient
+            Image("background-cloth")
+            VStack {
+                HStack {
+                    Text("Player 1 card").font(.title)
+                        .bold()
+                        .padding()
+                    Text("Player 2 card").font(.title)
+                        .bold()
+                        .padding()
+                }
+                HStack {
+                    Spacer()
+                    Image("card\(card1)").padding()
+                    Spacer()
+                    Image("card\(card2)").padding()
+                    Spacer()
+                }
+                Button {
+                    deal()
+                } label: {
+                    Image("deal")
+                }
+                Text(message).font(.largeTitle)
+                    .bold()
+                    .bold()
+                HStack {
+                    VStack {
+                        Text("Player 1").font(.title)
+                            .bold()
+                            .padding()
+                        Text("Score: \(score1)")
+                    }.font(.largeTitle)
+                        .bold()
+                        .padding()
+                    VStack {
+                        Text("Player 2").font(.title)
+                            .bold()
+                            .padding()
+                        Text("Score: \(score2)")
+                    }.font(.largeTitle)
+                        .bold()
+                        .padding()
+                }
+            }
+        }.foregroundColor(.white)
+            .ignoresSafeArea()
+    }
+    func deal() {
+        card1 = Int.random(in: 2...14)
+        card2 = Int.random(in: 2...14)
+        if card1 > card2 {
+            score1 += 1
+            message = "Player 1 wins!"
         }
-        .padding()
+        if card2 > card1 {
+            score2 += 1
+            message = "Player 2 wins!"
+        }
+        else {
+            message = "It's a draw!"
+        }
     }
 }
 
